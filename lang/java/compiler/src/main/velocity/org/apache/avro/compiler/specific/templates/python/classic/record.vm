@@ -52,5 +52,5 @@ class ${this.mangle($schema.getName())}(dict):
         if ${this.mangle($schema.getName())}.typecheck('$field.name()', value):
             self['$field.name()'] = value
         else:
-            raise TypeError("cannot set $field.name() to " + repr(type(value)) + ", expecting: ${this.pythonType($field.schema())}")
+            raise TypeError("cannot set $field.name() to " + repr(type(value)) + ", expecting ${this.pythonType($field.schema())}")
 #end

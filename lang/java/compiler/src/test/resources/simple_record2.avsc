@@ -1,0 +1,9 @@
+{
+  "type": "record",
+  "name": "SimpleRecord",
+  "fields" : [
+    {"name": "x", "type": "int"},
+      {"name": "y", "type": "string"},
+      {"name": "categorization", "type": {"type": "map", "values": "double"}}
+  ]
+}
