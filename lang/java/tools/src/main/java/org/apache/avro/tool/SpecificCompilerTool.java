@@ -28,8 +28,9 @@ import java.util.List;
 
 import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData.StringType;
 import org.apache.avro.compiler.specific.SpecificCompiler;
+import org.apache.avro.compiler.specific.python.PythonCompiler;
+import org.apache.avro.generic.GenericData.StringType;
 
 /**
  * A Tool for compiling avro protocols or schemas to Java classes using the Avro
@@ -40,14 +41,14 @@ public class SpecificCompilerTool implements Tool {
   @Override
   public int run(InputStream in, PrintStream out, PrintStream err,
       List<String> args) throws Exception {
-    if (args.size() < 3) {
+    if (args.size() < 4) {
       System.err
-          .println("Usage: [-string] (schema|protocol) input... outputdir");
+          .println("Usage: [-string] (schema|protocol) (python|java) input... outputdir");
       System.err
           .println(" input - input files or directories");
       System.err
           .println(" outputdir - directory to write generated java");
-      System.err.println(" -string - use java.lang.String instead of Utf8");
+      System.err.println(" -string - use java.lang.String instead of CharSequence");
       return 1;
     }
 
@@ -58,8 +59,10 @@ public class SpecificCompilerTool implements Tool {
       stringType = StringType.String;
       arg++;
     }
-      
-    String method = args.get(arg);
+
+    String method = args.get(arg++);
+    String lang = args.get(arg);
+
     List<File> inputs = new ArrayList<File>();
     File output = new File(args.get(args.size() - 1));
 
@@ -71,9 +74,17 @@ public class SpecificCompilerTool implements Tool {
       Schema.Parser parser = new Schema.Parser();
       for (File src : determineInputs(inputs, SCHEMA_FILTER)) {
         Schema schema = parser.parse(src);
-        SpecificCompiler compiler = new SpecificCompiler(schema);
-        compiler.setStringType(stringType);
-        compiler.compileToDestination(src, output);
+        if ("java".equals(lang)) {
+          SpecificCompiler compiler = new SpecificCompiler(schema);
+          compiler.setStringType(stringType);
+          compiler.compileToDestination(src, output);
+        } else if ("python".equals(lang)) {
+          PythonCompiler compiler = new PythonCompiler(schema);
+          compiler.compileToDestination(src, output);
+        } else {
+          System.err.println("Must choose either java or python as output language.");
+        }
+
       }
     } else if ("protocol".equals(method)) {
       for (File src : determineInputs(inputs, PROTOCOL_FILTER)) {

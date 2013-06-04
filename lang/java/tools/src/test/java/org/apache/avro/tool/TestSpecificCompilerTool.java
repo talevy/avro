@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * Verifies that the SpecificCompilerTool generates Java source properly
+ * Verifies that the SpecificCompilerTool generates Java and Python source properly
  */
 public class TestSpecificCompilerTool {
 
@@ -43,25 +43,56 @@ public class TestSpecificCompilerTool {
   // where test expected output comes from
   private static final File TEST_EXPECTED_OUTPUT_DIR =
     new File(TEST_DIR, "output");
-  private static final File TEST_EXPECTED_POSITION =
+  private static final File TEST_EXPECTED_POSITION_JAVA =
     new File(TEST_EXPECTED_OUTPUT_DIR, "Position.java");
-  private static final File TEST_EXPECTED_PLAYER =
+  private static final File TEST_EXPECTED_PLAYER_JAVA =
     new File(TEST_EXPECTED_OUTPUT_DIR, "Player.java");
+
+  private static final File TEST_EXPECTED_POSITION_PYTHON =
+    new File(TEST_EXPECTED_OUTPUT_DIR, "Position.py");
+  private static final File TEST_EXPECTED_PLAYER_PYTHON =
+    new File(TEST_EXPECTED_OUTPUT_DIR, "Player.py");
+
+  private static final File TEST_EXPECTED_STRING_OUTPUT_DIR =
+    new File(TEST_DIR, "output-string");
+  private static final File TEST_EXPECTED_STRING_POSITION_JAVA =
+    new File(TEST_EXPECTED_STRING_OUTPUT_DIR,
+             "avro/examples/baseball/Position.java");
+  private static final File TEST_EXPECTED_STRING_PLAYER_JAVA =
+    new File(TEST_EXPECTED_STRING_OUTPUT_DIR,
+             "avro/examples/baseball/Player.java");
+
+  private static final File TEST_EXPECTED_STRING_POSITION_PYTHON =
+    new File(TEST_EXPECTED_STRING_OUTPUT_DIR,
+             "avro/examples/baseball/Position.py");
+  private static final File TEST_EXPECTED_STRING_PLAYER_PYTHON =
+    new File(TEST_EXPECTED_STRING_OUTPUT_DIR,
+             "avro/examples/baseball/Player.py");
 
   // where test output goes
   private static final File TEST_OUTPUT_DIR =
     new File("target/compiler/output");
-  private static final File TEST_OUTPUT_PLAYER =
+  private static final File TEST_OUTPUT_PLAYER_JAVA =
     new File(TEST_OUTPUT_DIR, "avro/examples/baseball/Player.java");
-  private static final File TEST_OUTPUT_POSITION =
+  private static final File TEST_OUTPUT_POSITION_JAVA =
     new File(TEST_OUTPUT_DIR, "avro/examples/baseball/Position.java");
+
+  private static final File TEST_OUTPUT_PLAYER_PYTHON =
+    new File(TEST_OUTPUT_DIR, "avro/examples/baseball/Player.py");
+  private static final File TEST_OUTPUT_POSITION_PYTHON =
+    new File(TEST_OUTPUT_DIR, "avro/examples/baseball/Position.py");
 
   private static final File TEST_OUTPUT_STRING_DIR =
     new File("target/compiler/output-string");
-  private static final File TEST_OUTPUT_STRING_PLAYER =
-    new File(TEST_OUTPUT_DIR, "avro/examples/baseball/Player.java");
-  private static final File TEST_OUTPUT_STRING_POSITION =
-    new File(TEST_OUTPUT_DIR, "avro/examples/baseball/Position.java");
+  private static final File TEST_OUTPUT_STRING_PLAYER_JAVA =
+    new File(TEST_OUTPUT_STRING_DIR, "avro/examples/baseball/Player.java");
+  private static final File TEST_OUTPUT_STRING_POSITION_JAVA =
+    new File(TEST_OUTPUT_STRING_DIR, "avro/examples/baseball/Position.java");
+
+  private static final File TEST_OUTPUT_STRING_PLAYER_PYTHON =
+    new File(TEST_OUTPUT_STRING_DIR, "avro/examples/baseball/Player.py");
+  private static final File TEST_OUTPUT_STRING_POSITION_PYTHON =
+    new File(TEST_OUTPUT_STRING_DIR, "avro/examples/baseball/Position.py");
 
   @Before
   public void setUp() {
@@ -69,46 +100,78 @@ public class TestSpecificCompilerTool {
   }
 
   @Test
-  public void testCompileSchemaSingleFile() throws Exception {
+  public void testCompileSchemaSingleFile_Java() throws Exception {
 
-    doCompile(new String[]{"schema",
+    doCompile(new String[]{"schema", "java",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_OUTPUT_DIR.getPath()});
-    assertFileMatch(TEST_EXPECTED_POSITION, TEST_OUTPUT_POSITION);
+    assertFileMatch(TEST_EXPECTED_POSITION_JAVA, TEST_OUTPUT_POSITION_JAVA);
   }
 
   @Test
-  public void testCompileSchemaTwoFiles() throws Exception {
+  public void testCompileSchemaTwoFiles_Java() throws Exception {
 
-    doCompile(new String[]{"schema",
+    doCompile(new String[]{"schema", "java",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString() + "/player.avsc",
       TEST_OUTPUT_DIR.getPath()});
-    assertFileMatch(TEST_EXPECTED_POSITION, TEST_OUTPUT_POSITION);
-    assertFileMatch(TEST_EXPECTED_PLAYER,   TEST_OUTPUT_PLAYER);
+    assertFileMatch(TEST_EXPECTED_POSITION_JAVA, TEST_OUTPUT_POSITION_JAVA);
+    assertFileMatch(TEST_EXPECTED_PLAYER_JAVA,   TEST_OUTPUT_PLAYER_JAVA);
   }
 
   @Test
-  public void testCompileSchemaFileAndDirectory() throws Exception {
+  public void testCompileSchemaFileAndDirectory_Java() throws Exception {
 
-    doCompile(new String[]{"schema",
+    doCompile(new String[]{"schema", "java",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString(),
       TEST_OUTPUT_DIR.getPath()});
-    assertFileMatch(TEST_EXPECTED_POSITION, TEST_OUTPUT_POSITION);
-    assertFileMatch(TEST_EXPECTED_PLAYER,   TEST_OUTPUT_PLAYER);
+    assertFileMatch(TEST_EXPECTED_POSITION_JAVA, TEST_OUTPUT_POSITION_JAVA);
+    assertFileMatch(TEST_EXPECTED_PLAYER_JAVA,   TEST_OUTPUT_PLAYER_JAVA);
   }
 
   @Test
-  public void testCompileSchemasUsingString() throws Exception {
+  public void testCompileSchemasUsingString_Java() throws Exception {
 
-    doCompile(new String[]{"-string", "schema",
+    doCompile(new String[]{"-string", "schema", "java",
+      TEST_INPUT_DIR.toString() + "/position.avsc",
+      TEST_INPUT_DIR.toString() + "/player.avsc",
+      TEST_OUTPUT_STRING_DIR.getPath()});
+    assertFileMatch(TEST_EXPECTED_STRING_POSITION_JAVA, TEST_OUTPUT_STRING_POSITION_JAVA);
+    assertFileMatch(TEST_EXPECTED_STRING_PLAYER_JAVA,   TEST_OUTPUT_STRING_PLAYER_JAVA);
+  }
+
+    @Test
+  public void testCompileSchemaSingleFile_Python() throws Exception {
+
+    doCompile(new String[]{"schema", "python",
+      TEST_INPUT_DIR.toString() + "/position.avsc",
+      TEST_OUTPUT_DIR.getPath()});
+    assertFileMatch(TEST_EXPECTED_POSITION_PYTHON, TEST_OUTPUT_POSITION_PYTHON);
+  }
+
+  @Test
+  public void testCompileSchemaTwoFiles_Python() throws Exception {
+
+    doCompile(new String[]{"schema", "python",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString() + "/player.avsc",
       TEST_OUTPUT_DIR.getPath()});
-    assertFileMatch(TEST_EXPECTED_POSITION, TEST_OUTPUT_STRING_POSITION);
-    assertFileMatch(TEST_EXPECTED_PLAYER,   TEST_OUTPUT_STRING_PLAYER);
+    assertFileMatch(TEST_EXPECTED_POSITION_PYTHON, TEST_OUTPUT_POSITION_PYTHON);
+    assertFileMatch(TEST_EXPECTED_PLAYER_PYTHON,   TEST_OUTPUT_PLAYER_PYTHON);
   }
+
+  @Test
+  public void testCompileSchemaFileAndDirectory_Python() throws Exception {
+
+    doCompile(new String[]{"schema", "python",
+      TEST_INPUT_DIR.toString() + "/position.avsc",
+      TEST_INPUT_DIR.toString(),
+      TEST_OUTPUT_DIR.getPath()});
+    assertFileMatch(TEST_EXPECTED_POSITION_PYTHON, TEST_OUTPUT_POSITION_PYTHON);
+    assertFileMatch(TEST_EXPECTED_PLAYER_PYTHON,   TEST_OUTPUT_PLAYER_PYTHON);
+  }
+
 
   // Runs the actual compiler tool with the given input args
   private void doCompile(String[] args) throws Exception {
