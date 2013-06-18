@@ -55,7 +55,8 @@ public class Main {
         new TetherTool(),
         new TrevniCreateRandomTool(),
         new TrevniMetadataTool(),
-        new TrevniToJsonTool()
+        new TrevniToJsonTool(),
+        new SchemaValidatorTool()
         }) {
       Tool prev = tools.put(tool.getName(), tool);
       if (prev != null) {

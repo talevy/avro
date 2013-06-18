@@ -1,0 +1,7 @@
+{"type":"record", "name":"Sample", "namespace": "avro.examples.validate",
+    "fields": [
+        {"name": "number", "type": "int"},
+        {"name": "first_name", "type": "string", "default": "hello"},
+        {"name": "last_name", "type": ["null", "string"], "default": null}
+    ]
+}

@@ -1,0 +1,6 @@
+{"type":"record", "name":"Sample", "namespace": "avro.examples.validate",
+    "fields": [
+        {"name": "number", "type": "int"},
+        {"name": "newer_number", "type": "long"}
+    ]
+}
