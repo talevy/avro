@@ -3,8 +3,6 @@ package org.apache.avro.tool;
 import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +43,9 @@ public class SchemaValidatorTool implements Tool {
 
     try {
       validator.validate(newSchema, priors);
+      System.out.println("Valid!");
     } catch (SchemaValidationException e) {
+      System.out.println("Not Valid!");
       returnCode = 1;
     }
 
@@ -59,6 +59,6 @@ public class SchemaValidatorTool implements Tool {
 
   @Override
   public String getShortDescription() {
-    return "Validate whether an older schema can be resolved using a new schema.";
+    return "Validates new schemas against old.";
   }
 }
