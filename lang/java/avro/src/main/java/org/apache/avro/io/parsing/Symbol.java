@@ -18,6 +18,7 @@
 package org.apache.avro.io.parsing;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -349,6 +350,43 @@ public abstract class Symbol {
       return result;
     }
 
+  }
+  
+  /**
+   * Returns true if the Parser contains any Error symbol, indicating that it may fail 
+   * for some inputs.
+   */
+  public static boolean hasErrors(Symbol symbol) {
+    switch(symbol.kind) {
+    case ALTERNATIVE:
+      return hasErrors(((Alternative) symbol).symbols);
+    case EXPLICIT_ACTION:
+      return false;
+    case IMPLICIT_ACTION:
+      return symbol instanceof ErrorAction;
+    case REPEATER:
+      Repeater r = (Repeater) symbol;
+      return hasErrors(r.end) || hasErrors(r.production);
+    case ROOT:
+      return hasErrors(Arrays.copyOfRange(symbol.production, 1, symbol.production.length));
+    case SEQUENCE:
+      return hasErrors(symbol.production);
+    case TERMINAL:
+      return false;
+    default:
+      throw new RuntimeException("unknown symbol kind: " + symbol.kind);
+    }
+  }
+  
+  private static boolean hasErrors(Symbol[] symbols) {
+    if(null != symbols) {
+      for(Symbol s: symbols) {
+        if (hasErrors(s)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
     
   public static class Alternative extends Symbol {
