@@ -39,7 +39,7 @@ public class SchemaValidatorTool implements Tool {
       priors.add(new Schema.Parser().parse(new File(args.get(i))));
     }
 
-    SchemaValidator validator = new SchemaValidatorBuilder().canBeReadStrategy().validateLatest();
+    SchemaValidator validator = new SchemaValidatorBuilder().quixeyNothingRemoved().validateAll();
 
     try {
       validator.validate(newSchema, priors);

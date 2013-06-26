@@ -50,6 +50,14 @@ public final class SchemaValidatorBuilder {
   }
 
   /**
+   * Use a strategy that validates that schema is Quixey valid
+   */
+  public SchemaValidatorBuilder quixeyNothingRemoved() {
+    this.strategy = new ValidateQuixeyNothingRemoved();
+    return this;
+  }
+
+  /**
    * Use a strategy that validates that a schema can read existing schema(s),
    * and vice-versa, according to the Avro default schema resolution.
    */
@@ -57,17 +65,17 @@ public final class SchemaValidatorBuilder {
     this.strategy = new ValidateMutualRead();
     return this;
   }
-  
+
   public SchemaValidator validateLatest() {
     valid();
     return new ValidateLatest(strategy);
   }
-  
+
   public SchemaValidator validateAll() {
     valid();
     return new ValidateAll(strategy);
   }
-  
+
   private void valid() {
     if(null == strategy) {
       throw new AvroRuntimeException("SchemaValidationStrategy not specified in builder");
