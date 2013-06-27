@@ -18,6 +18,11 @@
 
 package org.apache.avro;
 
+import org.apache.avro.io.parsing.QuixeyResolvingGrammarGenerator;
+import org.apache.avro.io.parsing.Symbol;
+
+import java.io.IOException;
+
 /**
  * A {@link org.apache.avro.SchemaValidationStrategy} that checks that the {@link org.apache.avro.Schema} to
  * validate can read the existing schema according to the default Avro schema
@@ -38,7 +43,19 @@ class ValidateQuixeyNothingRemoved implements SchemaValidationStrategy {
   @Override
   public void validate(Schema toValidate, Schema existing)
       throws SchemaValidationException {
-    ValidateMutualRead.canRead(existing, toValidate);
+    // check normal Avro restrictions on mutual readability
+    //ValidateMutualRead.canRead(existing, toValidate);
+
+    boolean error = false;
+    try {
+      error = Symbol.hasErrors(new QuixeyResolvingGrammarGenerator().generate(existing, toValidate));
+    } catch (IOException e) {
+      throw new SchemaValidationException(toValidate, existing, e);
+    }
+
+    if (error) {
+      throw new SchemaValidationException(toValidate, existing);
+    }
   }
 
 }
