@@ -22,9 +22,9 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.avro.Protocol;
 import org.apache.avro.Schema;
@@ -41,27 +41,35 @@ public class SpecificCompilerTool implements Tool {
   @Override
   public int run(InputStream in, PrintStream out, PrintStream err,
       List<String> args) throws Exception {
-    if (args.size() < 4) {
+    if (args.size() < 3) {
       System.err
-          .println("Usage: [-string] (schema|protocol) (python|java) input... outputdir");
+          .println("Usage: [-lang (python|java)] [-string] (schema|protocol) input... outputdir");
       System.err
           .println(" input - input files or directories");
       System.err
           .println(" outputdir - directory to write generated java");
+      System.err.println(" -lang - choose which language to compile to. either 'java' or 'python' [default = java]");
       System.err.println(" -string - use java.lang.String instead of CharSequence");
       return 1;
     }
 
     StringType stringType = StringType.CharSequence;
+    String language = "java";
 
     int arg = 0;
+
+    if ("-lang".equals(args.get(arg))) {
+      arg++;
+      language = args.get(arg);
+      arg++;
+    }
+
     if ("-string".equals(args.get(arg))) {
       stringType = StringType.String;
       arg++;
     }
 
-    String method = args.get(arg++);
-    String lang = args.get(arg);
+    String method = args.get(arg);
 
     List<File> inputs = new ArrayList<File>();
     File output = new File(args.get(args.size() - 1));
@@ -74,17 +82,17 @@ public class SpecificCompilerTool implements Tool {
       Schema.Parser parser = new Schema.Parser();
       for (File src : determineInputs(inputs, SCHEMA_FILTER)) {
         Schema schema = parser.parse(src);
-        if ("java".equals(lang)) {
+        if ("java".equals(language)) {
           SpecificCompiler compiler = new SpecificCompiler(schema);
           compiler.setStringType(stringType);
           compiler.compileToDestination(src, output);
-        } else if ("python".equals(lang)) {
+        } else if ("python".equals(language)) {
           PythonCompiler compiler = new PythonCompiler(schema);
           compiler.compileToDestination(src, output);
         } else {
-          System.err.println("Must choose either java or python as output language.");
+          System.err.println("Chosen language is not supported. Expected \"java\" or \"python\"");
+          return 1;
         }
-
       }
     } else if ("protocol".equals(method)) {
       for (File src : determineInputs(inputs, PROTOCOL_FILTER)) {

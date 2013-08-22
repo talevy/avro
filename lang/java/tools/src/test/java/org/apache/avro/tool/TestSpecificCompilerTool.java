@@ -102,7 +102,7 @@ public class TestSpecificCompilerTool {
   @Test
   public void testCompileSchemaSingleFile_Java() throws Exception {
 
-    doCompile(new String[]{"schema", "java",
+    doCompile(new String[]{"schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_OUTPUT_DIR.getPath()});
     assertFileMatch(TEST_EXPECTED_POSITION_JAVA, TEST_OUTPUT_POSITION_JAVA);
@@ -111,7 +111,7 @@ public class TestSpecificCompilerTool {
   @Test
   public void testCompileSchemaTwoFiles_Java() throws Exception {
 
-    doCompile(new String[]{"schema", "java",
+    doCompile(new String[]{"schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString() + "/player.avsc",
       TEST_OUTPUT_DIR.getPath()});
@@ -122,7 +122,7 @@ public class TestSpecificCompilerTool {
   @Test
   public void testCompileSchemaFileAndDirectory_Java() throws Exception {
 
-    doCompile(new String[]{"schema", "java",
+    doCompile(new String[]{"schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString(),
       TEST_OUTPUT_DIR.getPath()});
@@ -133,7 +133,7 @@ public class TestSpecificCompilerTool {
   @Test
   public void testCompileSchemasUsingString_Java() throws Exception {
 
-    doCompile(new String[]{"-string", "schema", "java",
+    doCompile(new String[]{"-string", "schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString() + "/player.avsc",
       TEST_OUTPUT_STRING_DIR.getPath()});
@@ -144,7 +144,7 @@ public class TestSpecificCompilerTool {
     @Test
   public void testCompileSchemaSingleFile_Python() throws Exception {
 
-    doCompile(new String[]{"schema", "python",
+    doCompile(new String[]{"-lang", "python", "schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_OUTPUT_DIR.getPath()});
     assertFileMatch(TEST_EXPECTED_POSITION_PYTHON, TEST_OUTPUT_POSITION_PYTHON);
@@ -153,7 +153,7 @@ public class TestSpecificCompilerTool {
   @Test
   public void testCompileSchemaTwoFiles_Python() throws Exception {
 
-    doCompile(new String[]{"schema", "python",
+    doCompile(new String[]{"-lang", "python", "schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString() + "/player.avsc",
       TEST_OUTPUT_DIR.getPath()});
@@ -164,7 +164,7 @@ public class TestSpecificCompilerTool {
   @Test
   public void testCompileSchemaFileAndDirectory_Python() throws Exception {
 
-    doCompile(new String[]{"schema", "python",
+    doCompile(new String[]{"-lang", "python", "schema",
       TEST_INPUT_DIR.toString() + "/position.avsc",
       TEST_INPUT_DIR.toString(),
       TEST_OUTPUT_DIR.getPath()});
